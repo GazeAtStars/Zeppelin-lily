@@ -53,6 +53,8 @@ services:
 
   api:
     image: ghcr.io/rubyowo/zeppelin:stock
+    ports:
+      - "10.10.10.2:3131:3002"
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -77,6 +79,8 @@ services:
   
   dashboard:
     image: ghcr.io/rubyowo/zeppelin:stock
+    ports:
+      - "10.10.10.2:3130:3001"
     depends_on:
       migrate:
         condition: service_completed_successfully
