@@ -25,15 +25,15 @@ services:
       timeout: 5s
       retries: 60
 
-  nginx:
-    build:
-      context: .
-      dockerfile: docker/production/nginx/Dockerfile
-    ports:
-      - "${STANDALONE_WEB_PORT:?Missing STANDALONE_WEB_PORT}:443"
+  # nginx:
+  #   build:
+  #     context: .
+  #     dockerfile: docker/production/nginx/Dockerfile
+  #   ports:
+  #     - "${STANDALONE_WEB_PORT:?Missing STANDALONE_WEB_PORT}:443"
 
   migrate:
-    image: dragory/zeppelin
+    image: ghcr.io/rubyowo/zeppelin:stock
     depends_on:
       mysql:
         condition: service_healthy
@@ -44,14 +44,17 @@ services:
       - DB_USER=zeppelin
       - DB_PASSWORD=${STANDALONE_MYSQL_PASSWORD}
       - DB_DATABASE=zeppelin
-      - API_PATH_PREFIX=/api
+      - API_PATH_PREFIX=/
     env_file:
       - .env
     working_dir: /zeppelin/backend
     command: ["npm", "run", "migrate-prod"]
+    restart: no
 
   api:
-    image: dragory/zeppelin
+    image: ghcr.io/rubyowo/zeppelin:stock
+    ports:
+      - "10.10.10.2:3131:3002"
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -63,7 +66,7 @@ services:
     command: ["npm", "run", "start-api-prod"]
 
   bot:
-    image: dragory/zeppelin
+    image: ghcr.io/rubyowo/zeppelin:stock
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -75,7 +78,9 @@ services:
     command: ["npm", "run", "start-bot-prod"]
   
   dashboard:
-    image: dragory/zeppelin
+    image: ghcr.io/rubyowo/zeppelin:stock
+    ports:
+      - "10.10.10.2:3130:3001"
     depends_on:
       migrate:
         condition: service_completed_successfully
