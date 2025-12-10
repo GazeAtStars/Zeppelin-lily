@@ -30,7 +30,7 @@ services:
   redis:
     image: redis:8.2.3
     ports:
-      - "10.10.10.2:${VPS_REDIS_PORT:?Missing VPS_REDIS_PORT}:6379"
+      - "10.0.0.1:${VPS_REDIS_PORT:?Missing VPS_REDIS_PORT}:6379"
     volumes:
       - redis-data:/data
 
