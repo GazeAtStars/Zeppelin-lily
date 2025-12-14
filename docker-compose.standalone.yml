@@ -18,6 +18,7 @@ services:
     # Then, take a database dump from the old database, switch the volumes back, and load the dump into the new database.
     volumes:
       - mysql-data:/var/lib/mysql
+      - mysql-backup:/backup
       # - ./docker/production/data/mysql:/var/lib/mysql
     command:
       - "--skip-log-bin"
